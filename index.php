@@ -1,3 +1,7 @@
+<?php
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+?>
 <?php 
 $title = "Home | RCL Solar | New Jerseys Premier Solar Installer! Since 1999.";
 include ('includes/head.php'); ?>
