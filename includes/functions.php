@@ -8,8 +8,10 @@
 *
 *
 *******************************************************************************************************************************************************/
-	function insertLead($firstName, $lastName, $email, $phone, $address, $city, $state, $zip, $specialist, $ref, $referrer ='', $page, $ip){
+	function insertLead($firstName, $lastName, $email, $phone, $address, $city, $state, $zip, $specialist, $ref, $referrer, $page, $ip){
 		$conn = OpenCon();
+
+		$referrer = $referrer ?? '';
 	
 		$sql = "INSERT INTO Leads (leadsFirstName, leadsLastName, leadsEmail, leadsPhone, leadsAddress, leadsCity, leadsState, leadsZip, leadsSpecialist, leadsReferral, leadsReferrer, leadsPage, leadsIPAddress)
 				Values('$firstName','$lastName', '$email', '$phone', '$address', '$city', '$state', '$zip', '$specialist', '$ref', '$referrer', '$page', '$ip')";
