@@ -1,0 +1,364 @@
+<?php
+
+/********************************************************************************************************************************************************
+*
+*
+*Database functions
+*
+*
+*
+*******************************************************************************************************************************************************/
+	function insertLead($firstName, $lastName, $email, $phone, $address, $city, $state, $zip, $specialist, $ref, $referrer ='', $page, $ip){
+		$conn = OpenCon();
+	
+		$sql = "INSERT INTO Leads (leadsFirstName, leadsLastName, leadsEmail, leadsPhone, leadsAddress, leadsCity, leadsState, leadsZip, leadsSpecialist, leadsReferral, leadsReferrer, leadsPage, leadsIPAddress)
+				Values('$firstName','$lastName', '$email', '$phone', '$address', '$city', '$state', '$zip', '$specialist', '$ref', '$referrer', '$page', '$ip')";
+		//echo $sql; //debug code
+		if (mysqli_query($conn, $sql)){
+			$Rdata = 'sucess';
+		} else {
+			$Rdata ="Error: " . $sql . "<br>" . mysqli_error($conn);
+		}
+		return $Rdata;
+		CloseCon($conn);
+	}
+	
+	function insertCRMLead($firstName, $lastName, $email, $phone, $address, $city, $state, $zip, $specialist, $ref, $ip){
+		$conn = OpenCon2();
+		//$state1 = $this->findState($state);
+		//echo $state;
+		$sql1 = "SELECT * FROM states WHERE abbrev ='$state' LIMIT 1";
+		$result1 = mysqli_query($conn, $sql1);
+		//echo $sql1; //debug code
+		if (mysqli_num_rows($result1) > 0) {
+			while($row1 = mysqli_fetch_assoc($result1)) {
+				$state1 = $row1['id'];
+			}
+		}
+		if($specialist == 'RCL')
+			$specialist =0;
+		else{
+			$sql2 = "SELECT * FROM users WHERE role_id =7 AND display_name = '$specialist' ";
+			$result2 = mysqli_query($conn, $sql2);
+		echo $sql2; //debug code
+		if (mysqli_num_rows($result2) > 0) {
+			while($row2 = mysqli_fetch_assoc($result2)) {
+				$specialist =  $row2['id'];
+				
+			}
+		}else
+			$specialist =0;
+		}
+			//$specialist = findSpecialist($specialist);
+		
+		$sql = "INSERT INTO leads (first_name, last_name, office_origin, received_via, email, home_phone, street, city, state_id, postal_code, current_specialist_id, original_specialist_id,  referral, ip_address)
+				Values('$firstName','$lastName',58, 'web', '$email', '$phone', '$address', '$city', $state1, '$zip', $specialist, 0, '$ref', '$ip')";
+		//echo $sql; //debug code
+		if (mysqli_query($conn, $sql)){
+			$Rdata = 'sucess';
+		} else {
+			$Rdata ="Error: " . $sql . "<br>" . mysqli_error($conn);
+		}
+		return $Rdata;
+		
+		CloseCon($conn);
+	}
+	
+
+
+
+	function insertReferral($firstName, $lastName, $email, $phone, $address, $city, $state, $zip, $y_name, $y_phone, $y_email, $ip, $prize){
+		$conn = OpenCon();
+	
+		$sql = "INSERT INTO Suggested_Leads (suggestedFirstName, suggestedLastName, suggestedEmail, suggestedPhone, suggestedAddress, suggestedCity, suggestedState, suggestedZip, suggestedRefferralName, suggestedRefferalPhone, suggestedReferralEmail, suggestedIPAddress, suggestedPrize)
+				Values('$firstName','$lastName', '$email', '$phone', '$address', '$city', '$state', '$zip', '$y_name', '$y_phone', '$y_email', '$ip', '$prize')";
+		//echo $sql; //debug code
+		if (mysqli_query($conn, $sql)){
+			$Rdata = 'sucess';
+		} else {
+			$Rdata ="Error: " . $sql . "<br>" . mysqli_error($conn);
+		}
+		return $Rdata;
+		CloseCon($conn);
+	}
+	
+	function insertContact($name, $email, $phone, $message, $ip){
+		$conn = OpenCon();
+		
+		$sql = "INSERT INTO Contact_Us (contactName, contactPhone, contactEmail, contactMessage, contactIPAddress)
+				VALUES('$name','$phone', '$email', '$message', '$ip')";
+		if (mysqli_query($conn, $sql)){
+			$Rdata = 'sucess';
+		} else {
+			$Rdata ="Error: " . $sql . "<br>" . mysqli_error($conn);
+		}
+		return $Rdata;
+		
+		CloseCon($conn);
+	}
+
+	function insertNewsletter($email, $ip){
+		$conn = OpenCon();
+		
+		$sql = "INSERT INTO Newsletter ( newsletterEmail, newsletterIPAddress)
+				VALUES ('$email', '$ip')";
+		if (mysqli_query($conn, $sql)){
+			$Rdata = 'sucess';
+		} else {
+			$Rdata ="Error: " . $sql . "<br>" . mysqli_error($conn);
+		}
+		return $Rdata;
+		
+		CloseCon($conn);
+		
+	}
+
+	function getFaqs(){
+		$conn = OpenCon();
+		$Faq = array();
+		$index = 0;
+		$sql = "SELECT faqQuestion, faqAnswer FROM Faqs WHERE faqPublished = 'yes'";
+		$result = mysqli_query($conn, $sql);
+		//echo $sql; //debug code
+		if (mysqli_num_rows($result) > 0) {
+			while($row = mysqli_fetch_assoc($result)) {
+				$Faq[$index]['question'] = $row['faqQuestion'];
+				$Faq[$index]['answer'] = $row['faqAnswer'];
+				$index++;
+			}			
+		}else {
+			echo 0;
+		}
+		return $Faq;
+		CloseCon($conn);
+	}
+	
+	function getSpecialist($type){
+		$conn = OpenCon();
+		//mysql_query("SET NAMES 'utf8'");
+		$Specialist = array();
+		if($type !='home'){
+			if($type == 'page')
+				$orders = 'ORDER BY RAND()';
+			else
+				$orders = '';
+			$sql =  "SELECT * FROM Specialists WHERE specialistsPublished = 'yes' $orders";
+			$result = mysqli_query($conn, $sql);
+				echo $sql; //debug code
+			if (mysqli_num_rows($result) > 0){
+				while($row = mysqli_fetch_assoc($result)) {
+					$id = $row['specialistsID'];
+					$Specialist[$id]['name'] = $row['specialistsName'];
+					$Specialist[$id]['title'] = $row['specialistsTitle'];
+					$Specialist[$id]['email'] = $row['specialistsEmail'];
+					$Specialist[$id]['phone'] = $row['specialistsPhone'];
+					$Specialist[$id]['picture'] = $row['specialistsPicture'];
+					$Specialist[$id]['page_title'] = $row['specialistsPageTitle'];
+					$Specialist[$id]['page_id'] = $row['specialistsPageId'];
+					$Specialist[$id]['about'] = $row['specialistsAbout'];
+					$Specialist[$id]['page'] = $row['specialistsPage'];
+					$Specialist[$id]['description'] = $row['specialistsDescription'];
+				}
+				
+			}
+		}else if ($type == 'home') {
+			$sql = "SELECT specialistsID, specialistsName, specialistsTitle, specialistsEmail, specialistsPhone, specialistsDescription, specialistsThumb, specialistsPage
+					FROM Specialists
+					WHERE specialistsPublished= 'yes'";			
+			$result = mysqli_query($conn, $sql);
+				//echo $sql; //debug code
+			if (mysqli_num_rows($result) > 0){
+				while($row = mysqli_fetch_assoc($result)) {
+					$id = $row['specialistsID'];
+					$Specialist[$id]['name'] = $row['specialistsName'];
+					$Specialist[$id]['title'] = $row['specialistsTitle'];
+					$Specialist[$id]['email'] = $row['specialistsEmail'];
+					$Specialist[$id]['phone'] = $row['specialistsPhone'];
+					$Specialist[$id]['description'] = $row['specialistsDescription'];
+					$Specialist[$id]['thumb'] = $row['specialistsThumb'];
+					$Specialist[$id]['page'] = $row['specialistsPage'];
+					
+				}
+			}else{
+				$Specialist ="Error: " . $sql . "<br>" . mysqli_error($conn);
+			}
+		}
+		CloseCon($conn);
+		return $Specialist;
+	}
+
+	function getTeam($stat, $who){
+		$conn = OpenCon();
+		$teams = array();
+		if($stat == 'All')
+			$where = "AND teamGroup =  '$who'";
+		else
+			$where = "AND teamPageId = '$who' ";
+		$sql = "SELECT * FROM Team WHERE teamPublished = 'yes' $where ORDER BY teamSortOrder, teamLastName";
+		$result = mysqli_query($conn, $sql);
+				//echo $sql; //debug code
+			if (mysqli_num_rows($result) > 0){
+				while($row = mysqli_fetch_assoc($result)) {
+					$id = $row['teamID'];
+					$teams[$id]['fname'] = $row['teamFirstName'];
+					$teams[$id]['lname'] = $row['teamLastName'];
+					$teams[$id]['title'] = $row['teamTitle'];
+					$teams[$id]['phone'] = $row['teamPhone'];
+					$teams[$id]['byline'] = $row['teamByLine'];
+					$teams[$id]['thumb'] = $row['teamThumb'];
+					$teams[$id]['picture'] = $row['teamPicture'];
+					$teams[$id]['about'] = $row['teamAbout'];
+					$teams[$id]['page'] = $row['teamPage'];
+					$teams[$id]['pageId'] = $row['teamPageId'];
+					$teams[$id]['email'] = $row['teamEmail'];
+				}
+			}
+		return $teams;
+		CloseCon($conn);
+		
+	}
+
+	function getTestimonials($call){		
+		$tests = array();
+		$index = 0;
+		$conn = OpenCon();
+		if($call == 'home'){
+			$sql = "SELECT * FROM Reviews WHERE reviewStatus = 'published' ORDER BY RAND() LIMIT 4";
+		} else {
+			$sql = "SELECT * FROM Reviews WHERE reviewStatus = 'published' ORDER BY reviewDate DESC";
+		}
+		$result = mysqli_query($conn, $sql);
+		//echo $sql; //debug code
+		if (mysqli_num_rows($result) > 0) {
+  		// output data of each row
+  			while($row = mysqli_fetch_assoc($result)) {
+				$tests[$index]['rating'] = $row['reviewRating'];
+				$tests[$index]['title'] = $row['reviewTitle'];
+				$tests[$index]['review'] = $row['reviewText'];
+				$tests[$index]['name'] = $row['reviewName'];
+				$tests[$index]['date'] = $row['reviewDate'];
+				$index++;
+  			}
+		} else {
+  			echo "0 results";
+		}
+		CloseCon($conn);
+		return $tests;
+	}
+	
+	function findState($state){
+		$conn = OpenCon2();
+		
+		$sql = "SELECT * FROM states WHERE abbrev ='$state' LIMIT 1";
+		$result = mysqli_query($conn, $sql);
+		echo $sql; //debug code
+		if (mysqli_num_rows($result) > 0) {
+			while($row = mysqli_fetch_assoc($result)) {				
+				//return $row['id'];
+				return 34;
+			}
+		}else
+			return 34;
+		CloseCon($conn);
+	}
+	
+	function findSpecialist($specialist){
+		//$conn = OpenCon2();
+		$sql = "SELECT * FROM users WHERE role_id =7 AND display_name = '$specialist' ";
+		$result = mysqli_query($conn, $sql);
+		echo $sql; //debug code
+		if (mysqli_num_rows($result) > 0) {
+			while($row = mysqli_fetch_assoc($result)) {
+				return $row[id];
+				
+			}
+		}
+		//CloseCon($conn);
+	}
+
+/***********************************************************************************************************************************************
+*
+*
+* Website functions non database
+*
+*
+**********************************************************************************************************************************************/
+
+	function emailForms($subject, $addresses, $content ){		
+		$message = "Hello you";
+		$headers  = 'MIME-Version: 1.0' . "\r\n";
+		$headers .= 'Content-type: text/html' . "\r\n";
+		$headers = "From: notifications@rclsolar.com\r\n";
+		$headers .= 'X-Mailer: PHP/' . phpversion();			
+        mail($addresses, $subject, $content, $headers);	
+	}
+			
+	function test_input($data) {
+  		$data = trim($data);
+  		$data = stripslashes($data);
+  		$data = htmlspecialchars($data);
+  		return $data;
+	}
+	
+	function split_name($name) {
+    	$name = trim($name);
+    	$last_name = (strpos($name, ' ') === false) ? '' : preg_replace('#.*\s([\w-]*)$#', '$1', $name);
+    	$first_name = trim( preg_replace('#'.preg_quote($last_name,'#').'#', '', $name ) );
+    	return array($first_name, $last_name);
+	}
+	
+	
+	function countPictures(){
+		// Directory
+		$directory = "images/gallery";
+
+		// Returns array of files
+		$files = scandir($directory);
+
+		// Count number of files and store them to variable..
+		$num_files = count($files)-2;
+		
+		return $num_files;
+	}
+
+	function getPictures(){
+		$index = 0;
+		$pics = array();
+		foreach (glob("images/gallery/*.jpg") as $filename) {
+    		$pics[$index] = $filename;
+			$index ++;
+		}
+		return $pics;
+	}
+	
+	function urlCheck($member,$referrer){
+		$conn = OpenCon();
+		//echo $referrer;
+		switch ($referrer){
+			case 'team':
+				$sql = "SELECT teamID FROM Team Where teamPageId = '$member' ";
+				break;
+			case 'sales':
+				$sql = "SELECT specialistsID FROM Specialists WHERE specialistsPageId = '$member' ";
+				break;
+			default:
+				return 'no';
+				break;
+		}			
+		
+		$result = mysqli_query($conn, $sql);		
+		//echo $sql; //debug code		
+		
+		if (mysqli_num_rows($result) > 0)
+			return 'yes';
+		else
+			return 'no';
+		CloseCon($conn);
+	}
+	
+	function parseName($names,$specialist){
+		$namez = explode(".", $names);
+		$first_name = $namez[0];
+		$last_name = $namez[1];
+	}
+?>
