@@ -269,7 +269,7 @@
 		echo $sql; //debug code
 		if (mysqli_num_rows($result) > 0) {
 			while($row = mysqli_fetch_assoc($result)) {
-				return $row[id];
+				return $row['id'];
 				
 			}
 		}
