@@ -2,27 +2,30 @@
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 ?>
-<?php 
-$title = "Home | RCL Solar | New Jerseys Premier Solar Installer! Since 1999.";
-include ('includes/head.php'); ?>
-<body>
+<!DOCTYPE html>
+<html lang="en" class="wide wow-animation">
+<?php echo "\n<!-- START head -->\n"; include __DIR__ . '/includes/head.php'; echo "\n<!-- END head -->\n"; ?>
 
+<body>
   <!-- Page-->
   <div class="page">
-  <img src="images/rcl_25_crop.png" alt="" style="position: absolute; right: 5%; top: 0.25%; max-width: 150px;">
-    <?php include ('includes/header.php'); ?>
-    <?php include ('includes/swiper.php'); ?>
-    <?php include ('includes/homePageForm.php'); ?>
-    <?php //include ('includes/popularCategories.php'); ?>
-      <?php // include('includes/2Column.php'); ?>
-      <?php include ('includes/specialistsHome.php'); ?>
-     <?php include ('includes/ourAdvantages.php'); ?>
-    <?php include ('includes/recentHome.php'); ?>
-     <?php include ('includes/testimonialsHome.php'); ?>
-    
-    
-   
-    <?php include ('includes/footer.php'); ?>    
-</body>
 
+    <?php echo "\n<!-- START header -->\n"; include __DIR__ . '/includes/header.php'; echo "\n<!-- END header -->\n"; ?>
+
+    <?php echo "\n<!-- START swiper -->\n"; include __DIR__ . '/includes/swiper.php'; echo "\n<!-- END swiper -->\n"; ?>
+
+    <?php echo "\n<!-- START homePageForm -->\n"; include __DIR__ . '/includes/homePageForm.php'; echo "\n<!-- END homePageForm -->\n"; ?>
+
+    <?php echo "\n<!-- START specialistsHome -->\n"; include __DIR__ . '/includes/specialistsHome.php'; echo "\n<!-- END specialistsHome -->\n"; ?>
+
+    <?php echo "\n<!-- START ourAdvantages -->\n"; include __DIR__ . '/includes/ourAdvantages.php'; echo "\n<!-- END ourAdvantages -->\n"; ?>
+
+    <?php echo "\n<!-- START recentHome -->\n"; include __DIR__ . '/includes/recentHome.php'; echo "\n<!-- END recentHome -->\n"; ?>
+
+    <?php echo "\n<!-- START testimonialsHome -->\n"; include __DIR__ . '/includes/testimonialsHome.php'; echo "\n<!-- END testimonialsHome -->\n"; ?>
+
+    <?php echo "\n<!-- START footer -->\n"; include __DIR__ . '/includes/footer.php'; echo "\n<!-- END footer -->\n"; ?>
+
+  </div>
+</body>
 </html>
