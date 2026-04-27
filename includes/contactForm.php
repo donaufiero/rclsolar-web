@@ -47,7 +47,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 				$note .= $email."       Phone - ".$phone."\r\n";
 				$note .= $message;
 				$message = wordwrap($message, 70, "\r\n");
-				$email_to = 'cbell@rclsolar.com, nicole@rclsolar.com';
+				$email_to = 'cbell@rclsolar.com, nicole@rclsolar.com, kelly@rclsolar.com';
 				//$email_to = 'cbell@rclsolar.com'; //For Testing
 				emailForms('Contact us submission', $email_to , $note);
 				

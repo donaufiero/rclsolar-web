@@ -122,7 +122,7 @@ $firstName = $lastName= $email= $phone= $address= $city= $state= $zip= $ref= $re
             $message .= $email."       Phone - ".$phone."\r\n";
             $message .= $firstName." heard about RCL from ".$ref." ".$referral;
             //$message = wordwrap($message, 70, "\r\n");
-            $email_to = 'nicole@rclsolar.com, marlyn@rclsolar.com';
+            $email_to = 'nicole@rclsolar.com, marlyn@rclsolar.com, kelly@rclsolar.com';
             //$email_to = 'don@whiteoakwebdesign.com';
             emailForms('New Customer Solar Inquiry', $email_to , $message);
             echo "<script type='text/javascript'>window.top.location='formResponse.php';</script>"; exit;
@@ -137,7 +137,7 @@ $firstName = $lastName= $email= $phone= $address= $city= $state= $zip= $ref= $re
           $message .= $email."       Phone - ".$phone."\r\n";
           $message .= $firstName." heard about RCL from ".$ref." ".$referral;
           //$message = wordwrap($message, 70, "\r\n");
-          $email_to = 'nicole@rclsolar.com, marlyn@rclsolar.com';
+          $email_to = 'nicole@rclsolar.com, marlyn@rclsolar.com, kelly@rclsolar.com';
           //$email_to = 'don@whiteoakwebdesign.com';
           emailForms('Existing Customer Solar Inquiry', $email_to , $message);
           echo "<script type='text/javascript'>window.top.location='formResponse.php';</script>"; exit;
